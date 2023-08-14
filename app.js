@@ -1,9 +1,10 @@
+require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const app = express();
 const _ = require("lodash");
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.set("view engine", "ejs");
 
@@ -11,8 +12,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 // ========== DATABASE ===========
-// mongoose.connect("mongodb://127.0.0.1:27017/todolistDB")
-mongoose.connect("mongodb+srv://killergore20xx:mongoloidUs3r@cluster0.6xgc3mh.mongodb.net/todolistDB")
+userName = process.env.USER_NAME;
+userPwd = process.env.USER_PASSWORD;
+mongoose.connect(`mongodb+srv://${userName}:${userPwd}@cluster0.6xgc3mh.mongodb.net/todolistDB`)
   .then(() => {
     console.log("mongodb connected");
   })
@@ -21,7 +23,7 @@ mongoose.connect("mongodb+srv://killergore20xx:mongoloidUs3r@cluster0.6xgc3mh.mo
     console.log(err);
   })
 
-// schemas
+
 const itemsSchema = new mongoose.Schema({
   name: String
 });
@@ -31,7 +33,6 @@ const listSchema = new mongoose.Schema({
   items: [itemsSchema]
 });
 
-// models
 const List = mongoose.model("List", listSchema);
 const Item = mongoose.model("Item", itemsSchema);
 
